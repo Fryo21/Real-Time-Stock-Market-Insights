@@ -1,0 +1,6 @@
+venv/
+git.txt
+.env
+__pycache__/
+LogFile.log
+
