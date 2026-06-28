@@ -1,3 +1,4 @@
+import time
 import requests
 from config import logger, url, headers
 
@@ -28,11 +29,14 @@ def Connect_to_api():
 
             json_response.append(data)
 
-            logger.info(data)
-
         except requests.exceptions.RequestException as e:
             logger.error(f"Request failed for {symbol}: {e}")
-            raise
+            continue
+
+        time.sleep(1)
+
+    if not json_response:
+        raise requests.exceptions.RequestException("No stock data retrieved from API")
 
     return json_response
 

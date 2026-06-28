@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS stocks (
+    date   TIMESTAMP NOT NULL,
+    symbol VARCHAR(10) NOT NULL,
+    open   DOUBLE PRECISION,
+    high   DOUBLE PRECISION,
+    low    DOUBLE PRECISION,
+    close  DOUBLE PRECISION
+);
