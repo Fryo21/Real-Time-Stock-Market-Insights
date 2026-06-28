@@ -6,35 +6,37 @@
 An implementation of a real-time ETL pipeline that ingests intraday stock data from the Alpha Vantage API, streams it through Apache Kafka, processes it with Apache Spark, and loads it into PostgreSQL for analytics and reporting. Supporting Infrastructure and Spark consumer are containerised and managed using Docker Compose. The Python producer and Kafka verification scripts run manually on the local host machine.
 
 
-## Project Objectives
+### Project Objectives
 
-This project aims to implement a reliable and modular ETL data pipeline for processing and streaming stock market data 
+- This project aims to implement a reliable and modular ETL data pipeline for processing and streaming stock market data 
 with low latency.
-Real-time insights visualization on stock trends, trading volumes, and other financial metrics.
+- Real-time insights visualization on stock trends, trading volumes, and other financial metrics.
 
 
 ## Data Pipeline Architecture
 
+![Data Pipeline and Architecture](img/Architecture.drawio.png)
+
 The services are containerized and managed using Docker Compose, allowing Kafka, Kafka UI, Spark, PostgreSQL, pgAdmin and the Spark Consumer to run together in the same development environment.
 
-## Tech Stack and Data Flow
+### Tech Stack and Data Flow
 
 Data moves through the pipeline in this order:
 
 
-| Step | Technology                          | Role in this project                                 |
-| ---- | ----------------------------------- | ---------------------------------------------------- |
-| 1    | Alpha Vantage (RapidAPI)            | Source of intraday stock JSON (TSLA, MSFT, GOOGL)    |
-| 2    | Python + kafka-python               | Extract, transform, and publish records to Kafka     |
-| 3    | Apache Kafka                        | Durable message stream on topic `stock_analysis`     |
-| 4    | Apache Spark (Structured Streaming) | Consume Kafka, parse JSON, batch-write to PostgreSQL |
-| 5    | PostgreSQL                          | Persist rows in the `stocks` table                   |
-| 6    | pgAdmin / Power BI                  | Inspect data in the database / external BI reporting |
+| Technology                          | Role in this project                                 |
+| ----------------------------------- | ---------------------------------------------------- |
+| Alpha Vantage (RapidAPI)            | Source of intraday stock JSON (TSLA, MSFT, GOOGL)    |
+| Python + kafka-python               | Extract, transform, and publish records to Kafka     |
+| Apache Kafka                        | Durable message stream on topic `stock_analysis`     |
+| Apache Spark (Structured Streaming) | Consume Kafka, parse JSON, batch-write to PostgreSQL |
+| PostgreSQL                          | Persist rows in the `stocks` table                   |
+| pgAdmin / Power BI                  | Inspect data in the database / external BI reporting |
 
 
 Supporting infrastructure (Docker Compose): Kafka UI, Spark master, Spark worker.
 
-## Separation of Responsibilities
+### Separation of Responsibilities
 
 
 | Responsibility                 | Location                                                 | What it does                                                     |
@@ -51,23 +53,28 @@ The **producer** and **kafka_consumer** scripts run on local host machine. The *
 
 ## Project Structure
 
-```
-src/Producer/     # API extract + Kafka publish (run manually)
-src/Consumer/     # kafka_consumer.py (verify) + consumer.py (Spark job)
-init/postgres/    # stocks table DDL
-compose.yml       # Docker stack
-.env              # secrets (not committed)
-.env.example      # template for required environment variables
+
+| Directory                      | Functionality                                            |
+| ------------------------------ | -------------------------------------------------------- | 
+| `src/Producer/`                | API extract + Kafka publish (run manually)               | 
+| `src/Consumer/`                | kafka_consumer.py (verify) + consumer.py (Spark job)     |
+| `init/postgres/`               | stock table DDL                                          | 
+| `compose.yml`                  | Docker stack                                             | 
+| `.env`                         | secrets (not committed)                                  |
+| `env.example`                  | template for required environment variables              | 
 
 
-## Prerequisites
+### Prerequisites
 
-| Requirement | Notes |
-|-------------|-------|
-| Docker Desktop | Must be running |
-| Python 3.10+ | For producer and verification scripts |
-| RapidAPI key | Alpha Vantage API subscription |
-| Git | To clone the repository |
+| Requirement               | Notes                                       |
+|---------------------------|---------------------------------------------|
+| Docker Desktop            | Must be running                             |
+| Python 3.10+              | For producer and verification scripts       |
+| RapidAPI key              | Alpha Vantage API subscription              |
+| Git                       | To clone the repository                     |
+
+
+
 
 ## Setup (One-Time)
 
@@ -89,7 +96,7 @@ compose.yml       # Docker stack
    docker compose build consumer
   ```
 
-## Running the Project
+## To run this project
 
 The pipeline is **not fully automatic**. Follow these steps in order:
 
@@ -137,9 +144,5 @@ Leave this running. You should see `Received: {...}` when data is published.
 
 ```bash
 python src/Producer/main.py
-```
-
-```
-
 ```
 
